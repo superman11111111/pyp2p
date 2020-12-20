@@ -1,4 +1,5 @@
 env/
+*.key
 __pycache__/
 root@*
 *.swp

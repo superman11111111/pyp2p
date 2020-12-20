@@ -3,7 +3,10 @@ import sys
 import time
 import threading
 from settings import *
+from parse import parse_bytes
+from crypt import encrypt, generate_key
 
+generate_key()
 
 def connect():
     global IP, PORT
@@ -21,9 +24,9 @@ def connect():
             time.sleep(RETRY_DELAY)
     # print(socket.getsockname()[0])
     print(f"Sending socket established, ip:{IP} port:{PORT}")
-    sendingsock.send(b"hello world!")
     while 1:
-        sendingsock.send(input().encode())
+        msg = input().encode()
+        sendingsock.send(encrypt(msg))
 
 
 def listen():
@@ -50,7 +53,9 @@ def listen():
         while clientsock.fileno() != -1:
             recv = clientsock.recv(2048)
             if recv:
-                print(recv)
+                parse_bytes(recv)
+
+
 if len(sys.argv) > 3:
     IP = sys.argv[1]
     PORT = int(sys.argv[2])
